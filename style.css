@@ -1,0 +1,72 @@
+body{
+    padding:0;
+    margin:0;
+    box-sizing: border-box;
+    font-family:Arial,sans-serif;
+    background-color: rgb(245, 208, 245);
+}
+h1{
+    padding:15px;
+    margin:10px;
+    text-align: center;
+}
+.row{
+    width: 100%;
+    display: inline-block;
+}
+.col12{
+    width: 98%;
+    margin:10px;
+    padding:10px;
+}
+.col6{
+    width: 40%;
+    margin:10px;
+    padding:10px;
+}
+.col4{
+    width: 31%;
+    margin:10px;
+    padding:10px;
+}
+.col3{
+    width: 24%;
+    margin:10px;
+    padding:10px;
+}
+.col2{
+    width: 48%;
+    margin:10px;
+    padding:10px;
+}
+.all_col{
+    float: left;
+    margin: 10px;
+    /* border: 1px solid #000;; */
+}
+.inputtext{
+    width: 98%;
+    padding: 13px;
+    border-radius: 10px;
+    border-color:#667292;
+}
+.gender-options {
+    display: flex;
+    align-items: center;
+}
+.gender-options input[type="radio"] {
+    margin:18px 0; /* Adjust margins around radio buttons */
+   
+}
+.button-container{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.submit{
+    padding:8px;
+    margin: 13px;
+    border-radius: 10px;
+    border-color:#667292;
+    width:10%;
+}
