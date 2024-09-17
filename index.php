@@ -4,9 +4,9 @@ include('connection.php');
 extract($_POST);
 
 if(isset($is_submit)){
-    // applied position
+    // for validation
     if(isset($name)&& $name ==""){
-        $error['name'] ="Required";
+        $error['name'] ="Required plz";
     }
 // full name
     if(isset($full_name) && $full_name ==""){
@@ -21,9 +21,29 @@ if(isset($is_submit)){
         $error['address'] ="Required";
     }
 
-    if(isset($phone) && $phone ==""){
-        $error['phone'] ="Required";
+    
+    if(isset($gender) || (isset($gender) && $gender == '')){
+        $error['gender'] = "Required";
     }
+    // duplication
+    if(isset($phone) && $phone ==""){
+        $error['phone'] ="Required"; 
+    }
+    else{
+        echo "test";die;
+        
+
+        $sql = "SELECT * FROM users WHERE phone = '".$phone."'";
+        if(isset($mode) && $mode == 'edit'){
+            $sql .= " id != '".$id."'";
+        }
+        $result = mysqli_query($conn, $sql);
+        $count = mysqli_num_rows($result);
+        if($count > 0){
+            $error['phone'] = "This phone is already exist";
+        }
+    }
+   
     if(isset($email) && $email ==""){
         $error['email'] ="Required";
     }
@@ -48,20 +68,16 @@ if(isset($is_submit)){
     
 }
 ?>
+<!-- link style -->
+  <link rel="stylesheet" href="style.css">  
     
-    
-    
-    
-    
-    
-    
-    <h1>Application Information</h1>
+  <h1>Application Information</h1>
     <form method="post" action="">
         <input type="hidden" name="is_submit" value="y"/>
         <div class="row">
         <div class="col12 all_col">
             <label for="name"> <b>Position Applied For: 
-            <span class="Req">*<?php
+            <span class="color_red">*<?php
                 if(isset($error['name'])){
                     echo $error['name'];
                 }
@@ -148,31 +164,31 @@ if(isset($is_submit)){
         </div>
         <div class="col4 all_col">
             <label for="gender"> <b>Gender: <span class="color_red">*<?php
-            if(isset($error['gender'])){
+              if(isset($error['gender'])){
                 echo $error['gender'];
             }
-            ?></span></b> </label><br>
+            ?>
+            </span>
+         </b> </label><br>
             <div class="gender-options">
-                <input type="radio" id="gender"  name="gender" value="<?php
-            if(isset($gender)){
-               echo $gender;
-           }
-            
-            ?>"/>
+                <input type="radio" id="gender"  name="gender" value="male"<?php
+                if(isset($gender) && $gender == 'male'){
+                    echo"checked";
+                }
+                ?>>
             <b>Male</b>&nbsp; &nbsp; 
-        <input  type="radio" id="gender"  name="gender" value="<?php
-            if(isset($gender)){
-               echo $gender;
-           }
-            
-            ?>"/>
+        <input  type="radio" id="gender"  name="gender" value="female" <?php
+                if(isset($gender) && $gender == 'female'){
+                    echo"checked";
+                }
+                ?>>
             <b>Female</b>
             </div>
         </div>   
     </div>
 
     <div class="row">
-        <div class="col4 all_col">
+        <div class="col4 all_col"> 
             <label for="date"> <b>Joining Date: <span class="color_red">*<?php
             if(isset($error['date'])){
                 echo $error['date'];
@@ -182,9 +198,7 @@ if(isset($is_submit)){
             <input class="inputtext" type="date" id="date" name="date" value="<?php
             if(isset($date)){
                echo $date;
-           }
-            
-            ?>"/>
+           } ?>"/>
         </div>
         <div class="col4 all_col">
             <label for="cnic_no"> <b>CNIC No:
@@ -198,8 +212,7 @@ if(isset($is_submit)){
             if(isset($cnic_no)){
                echo $cnic_no;
            }
-            
-            ?>"/>
+           ?>"/>
         </div>
         <div class="col4 all_col">
             <label for="salary"> <b>Desired Salary:
@@ -213,38 +226,21 @@ if(isset($is_submit)){
             if(isset($salary)){
                echo $salary;
            }
-            
-            ?>"/>
+           ?>"/>
         </div>
         </div>    
         
     <div class="row">
         <div class="col4 all_col">
-            <label for="status"> <b>Marital Status: 
-                <span class="color_red">*<?php
-            if(isset($error['status"'])){
-                echo $error['status"'];
-            }
-            ?></span>
-            </b> </label><br>
-            <!-- how to apply -->
-            <select class="inputtext" type="text"  id="status"  name="status">
+            <label for="status"> <b>Marital Status:</b> </label><br>
+     <select class="inputtext" type="text"  id="status"  name="status">
              <option value="single">Single</option>
              <option value="single">Married</option>
             </select> 
         </div>
         <div class="col4 all_col">
-            <label for="no_of_children"> <b>No Of Children:<span class="color_red">*<?php
-            if(isset($error['no_of_children'])){
-                echo $error['no_of_children'];
-            }
-            ?></span></b> </label><br>
-            <input class="inputtext" type="number" id="no_of_children" name="no_of_children"  value="<?php
-            if(isset($no_of_children)){
-               echo $no_of_children;
-           }
-            
-            ?>"/>
+            <label for="no_of_children"> <b>No Of Children:</b> </label><br>
+            <input class="inputtext" type="number" id="no_of_children" name="no_of_children"  value="">
         </div>
         <div class="col4 all_col">
             <label for="date_of_birth"> <b>Date Of Birth: <span class="color_red">*<?php
@@ -283,134 +279,52 @@ if(isset($is_submit)){
         <div class="row">
             <div class="col6 all_col"> 
                 <label for="board"> <b>Intermediate Board: 
-
-                    <span class="color_red">*<?php
-            if(isset($error['board'])){
-                echo $error['board'];
-            }
-            ?></span>
                 </b> </label><br>
-                <input class="inputtext" type="text" id="board" name="board"  value="<?php
-            if(isset($board)){
-               echo $board;
-           }
-            
-            ?>"/>
+                <input class="inputtext" type="text" id="board" name="board"  value="">
             </div>
             <div class="col6 all_col">
-                <label for="group"> <b>Inter Group: 
-                    <span class="color_red">*<?php
-            if(isset($error['group'])){
-                echo $error['group'];
-            }
-            ?></span>
+                <label for="group"> <b>Inter Group:
                 </b> </label><br>
-                <input class="inputtext" type="text" id="group" name="group"  value="<?php
-            if(isset($group)){
-               echo $group;
-           }
-            
-            ?>"/>
+                <input class="inputtext" type="text" id="group" name="group"  value="">
             </div>
         </div>
        
         <div class="row">
             <div class="col6 all_col"> 
                 <label for="inter_to"> <b>Inter To: 
-                    <span class="color_red">*<?php
-            if(isset($error['inter_to'])){
-                echo $error['inter_to'];
-            }
-            ?></span>
                 </b> </label><br>
-                <input class="inputtext" type="text" id="inter_to" name="inter_to" value="<?php
-            if(isset($inter_to)){
-               echo $inter_to;
-           }
-            
-            ?>"/>
+                <input class="inputtext" type="text" id="inter_to" name="inter_to" value="">
             </div>
             <div class="col6 all_col">
                 <label for="inter_from"> <b>Inter From: 
-                    <span class="color_red">*<?php
-            if(isset($error['inter_from'])){
-                echo $error['inter_from'];
-            }
-            ?></span>
                 </b> </label><br>
-                <input class="inputtext" type="text" id="inter_from" name="inter_from" value="<?php
-            if(isset($inter_from)){
-               echo $inter_from;
-           }
-            
-            ?>"/> 
+                <input class="inputtext" type="text" id="inter_from" name="inter_from" value=""> 
             </div>
         </div>
 
         <div class="row"></div>
             <div class="col6 all_col"> 
                 <label for="uni"> <b>University:
-
-                    <span class="color_red">*<?php
-            if(isset($error['uni'])){
-                echo $error['uni'];
-            }
-            ?></span>
                 </b> </label><br>
-                <input class="inputtext" type="text" id="uni" name="uni" value="<?php
-            if(isset($uni)){
-               echo $uni;
-           }
-            
-            ?>"/>
+                <input class="inputtext" type="text" id="uni" name="uni" value="">
             </div>
             <div class="col6 all_col">
-                <label for="city"> <b>City: 
-                    <span class="color_red">*<?php
-            if(isset($error['city'])){
-                echo $error['city'];
-            }
-            ?></span>
+                <label for="city"> <b>City:
                 </b> </label><br>
-                <input class="inputtext" type="text" id="city" name="city"  value="<?php
-            if(isset($city)){
-               echo $city;
-           }
-            
-            ?>"/>
+                <input class="inputtext" type="text" id="city" name="city"  value="">
             </div>
         </div>
        
         <div class="row">
             <div class="col4 all_col">
                 <label for="from_city"> <b>From: 
-                    <span class="color_red">*<?php
-            if(isset($error['from_city'])){
-                echo $error['from_city'];
-            }
-            ?></span>
                 </b> </label><br>
-                <input class="inputtext" type="text" id="from_city" name="from_city" value="<?php
-            if(isset($from_city)){
-               echo $from_city;
-           }
-            
-            ?>"/>
+                <input class="inputtext" type="text" id="from_city" name="from_city" value="">
             </div>
             <div class="col4 all_col">
                 <label for="name_to"> <b>To: 
-                    <span class="color_red">*<?php
-            if(isset($error['name_to'])){
-                echo $error['name_to'];
-            }
-            ?></span>
                 </b> </label><br>
-                <input class="inputtext" type="text" id="name_to" name="name_to" value="<?php
-            if(isset($name_to)){
-               echo $name_to;
-           }
-            
-            ?>"/>
+                <input class="inputtext" type="text" id="name_to" name="name_to" value="">
             </div>
             <div class="col4 all_col">
                 <label for="graduate"> <b>Are you  graduate: <span class="color_red">*<?php

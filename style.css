@@ -25,7 +25,7 @@ h1{
     padding:10px;
 }
 .col4{
-    width: 31%;
+    width: 30%;
     margin:10px;
     padding:10px;
 }
@@ -69,4 +69,8 @@ h1{
     border-radius: 10px;
     border-color:#667292;
     width:10%;
+}
+.color_red{
+
+    color: red;
 }
